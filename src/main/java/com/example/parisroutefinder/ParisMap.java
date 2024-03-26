@@ -66,5 +66,13 @@ public class ParisMap {
             size--;
         }
     }
+    public void addStreet(Street street) {
+        if (landmarkIndexMap.containsKey(street.getStartLandmark().getName()) && landmarkIndexMap.containsKey(street.getEndLandmark().getName())) {
+            int startIndex = landmarkIndexMap.get(street.getStartLandmark().getName());
+            int endIndex = landmarkIndexMap.get(street.getEndLandmark().getName());
+            adjacencyMatrix[startIndex][endIndex] = street.getDistance();
+            adjacencyMatrix[endIndex][startIndex] = street.getDistance();
+        }
+    }
 
 }
