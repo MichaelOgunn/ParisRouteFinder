@@ -13,6 +13,6 @@
             <Image url="@city%20of%20paris.jpg" />
          </image>
       </ImageView>
-      <Button layoutX="159.0" layoutY="252.0" mnemonicParsing="false" text="Lets Explore" />
+      <Button layoutX="159.0" layoutY="252.0" mnemonicParsing="false" stylesheets="@../../../../../Second%20Year/Semester2/dataStructure2/PillAnalyser/src/main/resources/com/example/pillanalyser/CSS.css" text="Lets Explore" />
    </children>
 </Pane>
