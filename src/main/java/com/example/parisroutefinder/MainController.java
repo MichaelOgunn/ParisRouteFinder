@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -15,6 +16,8 @@ public class MainController implements Initializable {
     public ImageView mapImageView,bfsView;
     public Image parisMap;
     public Tooltip tooltip;
+
+    public HashMap<Integer, Landmark> landmarks = new HashMap<>();
 
     public void clickOnImage(MouseEvent e){
         double xInView = e.getX();
@@ -33,6 +36,10 @@ public class MainController implements Initializable {
         System.out.println(xOfImage+" "+ yOfImage);
     }
 
+    public void addLandmarksOnMap(){
+
+
+    }
 
     public void removeToolTip() {
         if (tooltip!=null) tooltip.hide();//hide after mouse moved
