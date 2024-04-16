@@ -58,4 +58,13 @@ public class Landmark {
     public void removeAdjacentStreet(Street street) {
         adjacentStreets.remove(street);
     }
+
+    @Override
+    public String toString() {
+        return "Landmark{" +
+                "name='" + name + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", culturalValue=" + culturalValue ;
+    }
 }

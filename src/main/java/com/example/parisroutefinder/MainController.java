@@ -69,7 +69,6 @@ public class MainController implements Initializable {
             gc.drawImage(parisWithLandmarks,0,0,parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
             for (Street s : streets)
                 gc.strokeLine(s.startLandmark.latitude,s.startLandmark.longitude,s.endLandmark.latitude,s.endLandmark.longitude);
-
             WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
             canvas.snapshot(null, imageWithPath);
             mapImageView.setImage(imageWithPath);
