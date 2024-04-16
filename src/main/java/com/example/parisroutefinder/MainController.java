@@ -60,8 +60,20 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void dijkstraShortestPath(){
+    public void dijkstraShortestPath() {
+        mapImageView.setImage(parisWithLandmarks);
+        if (startLandmarks.getValue() != null && destLandmarks.getValue() != null) {
+            ArrayList<Street> streets = parisGraph.dijkstraShortestPath(startLandmarks.getValue(),destLandmarks.getValue());
+            Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.drawImage(parisWithLandmarks,0,0,parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+            for (Street s : streets)
+                gc.strokeLine(s.startLandmark.latitude,s.startLandmark.longitude,s.endLandmark.latitude,s.endLandmark.longitude);
 
+            WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
+            canvas.snapshot(null, imageWithPath);
+            mapImageView.setImage(imageWithPath);
+        }
     }
 
     public void addToolTip(MouseEvent e, int latitude, int longitude) {

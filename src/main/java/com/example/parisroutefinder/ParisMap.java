@@ -1,5 +1,6 @@
 package com.example.parisroutefinder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +74,12 @@ public class ParisMap {
             adjacencyMatrix[startIndex][endIndex] = street.getDistance();
             adjacencyMatrix[endIndex][startIndex] = street.getDistance();
         }
+    }
+
+    public ArrayList<Street> dijkstraShortestPath(String landmark1, String landmark2){
+        ArrayList<Street> streets = new ArrayList<>();
+
+        return streets;
     }
 
 }

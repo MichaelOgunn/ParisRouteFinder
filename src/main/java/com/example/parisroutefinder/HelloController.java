@@ -28,10 +28,11 @@ public class HelloController implements Initializable {
         Junction j3 = new Junction("j3", 150,165,0);
         Junction j4 = new Junction("j4", 150,117,0);
 
-//        Street s1 = new Street("Avenue Kleber", 10, l2,l7);//arc de triomphe to eiffel tower
-//        Street s2 = new Street("Bd de Courcelles", 20, l2,l3);//arc de triomphe to sacre-coeur
-//        Street s3 = new Street("Av. des Champs", 18, l2,l4);//arc de triomphe to louvre
-//        Street s4 = new Street("R. d'Amsterdam", 15, l3,l5);//sacre-coeur to opera garnier
+        Street s1 = new Street("eiffelToj1", 20, l7,j1);
+        Street s2 = new Street("j1Toj2", 20, j1,j2);
+        Street s3 = new Street("j2Toj3", 29.5, j2,j3);
+        Street s4 = new Street("j3Toj4", 48, j3,j4);
+        Street s5 = new Street("j4ToArcDeTriomphe", 48, j4,l2);
 
         //Adding Landmarks to list based on where they are on the map, using index on map as key
         MainController.mainController.landmarks.add(l1);
@@ -55,6 +56,16 @@ public class HelloController implements Initializable {
         MainController.mainController.parisGraph.addLandmark(l5);
         MainController.mainController.parisGraph.addLandmark(l6);
         MainController.mainController.parisGraph.addLandmark(l7);
+        MainController.mainController.parisGraph.addLandmark(j2);
+        MainController.mainController.parisGraph.addLandmark(j1);
+        MainController.mainController.parisGraph.addLandmark(j3);
+        MainController.mainController.parisGraph.addLandmark(j4);
+
+        MainController.mainController.parisGraph.addStreet(s1);
+        MainController.mainController.parisGraph.addStreet(s2);
+        MainController.mainController.parisGraph.addStreet(s3);
+        MainController.mainController.parisGraph.addStreet(s4);
+        MainController.mainController.parisGraph.addStreet(s5);
 
         MainController.mainController.startLandmarks.getItems().add(l1.name);
         MainController.mainController.startLandmarks.getItems().add(l2.name);
