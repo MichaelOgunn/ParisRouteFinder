@@ -23,11 +23,15 @@ public class HelloController implements Initializable {
         Landmark l6 = new Landmark("Catacombs", 282,361,10);
         Landmark l7 = new Landmark("Eiffel Tower", 121,205,10);
 
+        Junction j1 = new Junction("j1", 106,192,0);
+        Junction j2 = new Junction("j2", 123,177,0);
+        Junction j3 = new Junction("j3", 150,165,0);
+        Junction j4 = new Junction("j4", 150,117,0);
+
 //        Street s1 = new Street("Avenue Kleber", 10, l2,l7);//arc de triomphe to eiffel tower
 //        Street s2 = new Street("Bd de Courcelles", 20, l2,l3);//arc de triomphe to sacre-coeur
 //        Street s3 = new Street("Av. des Champs", 18, l2,l4);//arc de triomphe to louvre
 //        Street s4 = new Street("R. d'Amsterdam", 15, l3,l5);//sacre-coeur to opera garnier
-
 
         //Adding Landmarks to list based on where they are on the map, using index on map as key
         MainController.mainController.landmarks.add(l1);
@@ -37,9 +41,13 @@ public class HelloController implements Initializable {
         MainController.mainController.landmarks.add(l5);
         MainController.mainController.landmarks.add(l6);
         MainController.mainController.landmarks.add(l7);
+        MainController.mainController.landmarks.add(j2);
+        MainController.mainController.landmarks.add(j1);
+        MainController.mainController.landmarks.add(j3);
+        MainController.mainController.landmarks.add(j4);
 
         //Adding Landmarks to ParisMap based on where they are on the map, using index on map as key
-        MainController.mainController.parisGraph=new ParisMap(7);
+        MainController.mainController.parisGraph=new ParisMap(11);
         MainController.mainController.parisGraph.addLandmark(l1);
         MainController.mainController.parisGraph.addLandmark(l2);
         MainController.mainController.parisGraph.addLandmark(l3);
@@ -48,21 +56,21 @@ public class HelloController implements Initializable {
         MainController.mainController.parisGraph.addLandmark(l6);
         MainController.mainController.parisGraph.addLandmark(l7);
 
-        MainController.mainController.startLandmarks.getItems().add(l1);
-        MainController.mainController.startLandmarks.getItems().add(l2);
-        MainController.mainController.startLandmarks.getItems().add(l3);
-        MainController.mainController.startLandmarks.getItems().add(l4);
-        MainController.mainController.startLandmarks.getItems().add(l5);
-        MainController.mainController.startLandmarks.getItems().add(l6);
-        MainController.mainController.startLandmarks.getItems().add(l7);
+        MainController.mainController.startLandmarks.getItems().add(l1.name);
+        MainController.mainController.startLandmarks.getItems().add(l2.name);
+        MainController.mainController.startLandmarks.getItems().add(l3.name);
+        MainController.mainController.startLandmarks.getItems().add(l4.name);
+        MainController.mainController.startLandmarks.getItems().add(l5.name);
+        MainController.mainController.startLandmarks.getItems().add(l6.name);
+        MainController.mainController.startLandmarks.getItems().add(l7.name);
 
-        MainController.mainController.destLandmarks.getItems().add(l1);
-        MainController.mainController.destLandmarks.getItems().add(l2);
-        MainController.mainController.destLandmarks.getItems().add(l3);
-        MainController.mainController.destLandmarks.getItems().add(l4);
-        MainController.mainController.destLandmarks.getItems().add(l5);
-        MainController.mainController.destLandmarks.getItems().add(l6);
-        MainController.mainController.destLandmarks.getItems().add(l7);
+        MainController.mainController.destLandmarks.getItems().add(l1.name);
+        MainController.mainController.destLandmarks.getItems().add(l2.name);
+        MainController.mainController.destLandmarks.getItems().add(l3.name);
+        MainController.mainController.destLandmarks.getItems().add(l4.name);
+        MainController.mainController.destLandmarks.getItems().add(l5.name);
+        MainController.mainController.destLandmarks.getItems().add(l6.name);
+        MainController.mainController.destLandmarks.getItems().add(l7.name);
 
         HelloApplication.mainStage.setScene(HelloApplication.mainS);
         MainController.mainController.parisMap = MainController.mainController.mapImageView.getImage();
@@ -70,9 +78,11 @@ public class HelloController implements Initializable {
         Canvas canvas = new Canvas(MainController.mainController.parisMap.getWidth(),MainController.mainController.parisMap.getHeight());
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.drawImage(MainController.mainController.parisMap, 0, 0, MainController.mainController.parisMap.getWidth(), MainController.mainController.parisMap.getHeight());
-        for (Landmark l : MainController.mainController.landmarks){
-            graphicsContext.setFill(Color.RED);
-            graphicsContext.fillOval(l.latitude - 5, l.longitude- 5, 10, 10);
+        for (Landmark l : MainController.mainController.landmarks) {
+            if (!(l instanceof Junction)) {
+                graphicsContext.setFill(Color.RED);
+                graphicsContext.fillOval(l.latitude - 5, l.longitude - 5, 10, 10);
+            }
         }
         WritableImage landmarks = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
         canvas.snapshot(null, landmarks);

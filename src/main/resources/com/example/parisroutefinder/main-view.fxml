@@ -47,7 +47,7 @@
         </children></HBox>
     <HBox alignment="CENTER" layoutX="10.0" layoutY="509.0" prefHeight="87.0" prefWidth="900.0">
         <children>
-            <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(Dijkstra)" />
+            <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(Dijkstra)" onAction="#dijkstraShortestPath"/>
             <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(BFS)" />
             <Button layoutX="460.0" layoutY="90.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Most Historical Route" />
         </children>

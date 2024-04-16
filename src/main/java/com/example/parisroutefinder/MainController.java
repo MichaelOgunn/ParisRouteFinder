@@ -26,7 +26,7 @@ public class MainController implements Initializable {
     @FXML
     public RadioButton waypoint;
     @FXML
-    public ChoiceBox<Landmark> startLandmarks,destLandmarks;
+    public ChoiceBox<String> startLandmarks,destLandmarks;
     @FXML
     public CheckBox louvre,sacreCouer,eiffelTower,notreDam,arcDeTriomphe,operaGarnier,catacombs;
     public Image parisMap,parisWithLandmarks;
@@ -59,9 +59,15 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
+    public void dijkstraShortestPath(){
+
+    }
+
     public void addToolTip(MouseEvent e, int latitude, int longitude) {
         for (Landmark l :landmarks) {
-            if ((l.latitude<=latitude+10 && l.latitude>=latitude-10) && (l.longitude<=longitude+10 && l.longitude>=longitude-10)) {
+            if ((l.latitude<=latitude+10 && l.latitude>=latitude-10) && (l.longitude<=longitude+10 && l.longitude>=longitude-10)
+                && !(l instanceof Junction)) {
                 tooltip = new Tooltip("Name: " + l.getName() + '\n' +
                         "Cultural Value: " + l.getCulturalValue());
                 break;
