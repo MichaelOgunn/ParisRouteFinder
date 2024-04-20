@@ -2,6 +2,7 @@ package com.example.parisroutefinder;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
@@ -24,6 +25,9 @@ public class MainController implements Initializable {
     @FXML
     public ImageView mapImageView;
     @FXML
+    public ImageView bwMapImageView;
+
+    @FXML
     public RadioButton waypoint;
     @FXML
     public ChoiceBox<String> startLandmarks,destLandmarks;
@@ -34,6 +38,7 @@ public class MainController implements Initializable {
     public Tooltip tooltip;
     public List<Landmark> landmarks = new ArrayList<>();
     public ParisMap parisGraph;
+
 
     public void clickOnImage(MouseEvent e){
         double xInView = e.getX();
@@ -73,6 +78,53 @@ public class MainController implements Initializable {
             canvas.snapshot(null, imageWithPath);
             mapImageView.setImage(imageWithPath);
         }
+    }
+    public void bfsShortestPath() {
+        if (startLandmarks.getValue() != null && destLandmarks.getValue() != null) {
+            String startLandmark = startLandmarks.getValue();
+            String destLandmark = destLandmarks.getValue();
+            Point2D start = landmarkPoint(startLandmark);
+            Point2D end = landmarkPoint(destLandmark);
+            if(start!=null && end!=null) {
+                ArrayList<Point2D> path = parisGraph.bfsShortestPath(bAndWParis,start, end);
+                Canvas canvas = new Canvas(parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.drawImage(parisWithLandmarks, 0, 0, parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+                if(path.size()>1) {
+
+                    for (int i = 0; i < path.size() -1; i++) {
+                        Point2D p1= path.get(i);
+                        Point2D p2= path.get(i+1);
+                        gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+                    }
+                }
+                WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
+                canvas.snapshot(null, imageWithPath);
+                mapImageView.setImage(imageWithPath);
+            }
+            else {
+                System.out.println("Landmark not found");
+            }
+        }
+
+
+    }
+
+    private Point2D landmarkPoint(String landmarkName) {
+        Landmark landmark = getLandmarkByName(landmarkName);
+        if (landmark!=null) {
+            return new Point2D(landmark.latitude,landmark.longitude);
+        }
+        return null;
+    }
+
+    public Landmark getLandmarkByName(String landmarkName) {
+        for (Landmark landmark : landmarks) {
+            if (landmark.getName().equals(landmarkName)) {
+                return landmark;
+            }
+        }
+        return null;
     }
 
     public void addToolTip(MouseEvent e, int latitude, int longitude) {

@@ -10,13 +10,15 @@ public class Landmark {
     int culturalValue;
     // Consider using a Map if you need to quickly lookup streets by their destination landmark.
     List<Street> adjacentStreets;
+    private Boolean isJunction;
 
-    public Landmark(String name, double latitude, double longitude, int culturalValue) {
+    public Landmark(String name, double latitude, double longitude, int culturalValue,boolean isJunction) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.culturalValue = culturalValue;
         this.adjacentStreets = new ArrayList<>();
+        this.isJunction= isJunction;
     }
 
     public String getName() {
@@ -26,7 +28,12 @@ public class Landmark {
     public void setName(String name) {
         this.name = name;
     }
-
+    public boolean isJunction() {
+        return isJunction;
+    }
+    public void setIsJunction(boolean isJunction) {
+        this.isJunction = isJunction;
+    }
     public double getLatitude() {
         return latitude;
     }

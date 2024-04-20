@@ -1,17 +1,23 @@
 package com.example.parisroutefinder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+
+import java.util.*;
 
 public class ParisMap {
     // Using an adjacency matrix to represent the map
     private double[][] adjacencyMatrix;
     private Map<String, Integer> landmarkIndexMap;
     private int size; // tracks the Size of the matrix
+    public WritableImage BwImage;
 
 
-    public ParisMap(int initialCapacity) {
+
+    public ParisMap(int initialCapacity, WritableImage image) {
+        this.BwImage = image;
         adjacencyMatrix = new double[initialCapacity][initialCapacity];
         //initializing distances to indicate that there is no route
         for (int i = 0; i <initialCapacity ; i++) {
@@ -32,6 +38,7 @@ public class ParisMap {
         if (!landmarkIndexMap.containsKey(landmark.getName())) {
             landmarkIndexMap.put(landmark.getName(), size);
             adjacencyMatrix[size][size] = 0;
+            System.out.println("Adding landmark: " + landmark.getName() + " with index " + size);
             adjacencyMatrix[size][landmarkIndexMap.get(landmark.getName())] = 0;
             adjacencyMatrix[landmarkIndexMap.get(landmark.getName())][size] = 0;
             size++;
@@ -75,13 +82,83 @@ public class ParisMap {
             adjacencyMatrix[endIndex][startIndex] = street.getDistance();
         }
     }
-
-    public ArrayList<Street> dijkstraShortestPath(String landmark1, String landmark2){
+    public ArrayList<Street> dijkstraShortestPath(String landmark1, String landmark2) {
         ArrayList<Street> streets = new ArrayList<>();
 
         // Get indices of landmarks
         Integer index1 = landmarkIndexMap.get(landmark1);
         Integer index2 = landmarkIndexMap.get(landmark2);
+
+        // Check if indices are valid
+        if (index1 == null || index2 == null || index1 >= size || index2 >= size) {
+            System.out.println("Invalid indices or landmarks not found.");
+            return streets; // Return empty path indicating an error
+        }
+
+        double[] distances = new double[size];
+        Arrays.fill(distances, Double.MAX_VALUE);
+        distances[index1] = 0;
+
+        int[] previous = new int[size];
+        Arrays.fill(previous, -1);
+
+        boolean[] visited = new boolean[size];
+
+        for (int i = 0; i < size; i++) {
+            int minIndex = -1;
+            double minDistance = Double.MAX_VALUE;
+
+            // Find the vertex with the smallest tentative distance
+            for (int j = 0; j < size; j++) {
+                if (!visited[j] && distances[j] < minDistance) {
+                    minIndex = j;
+                    minDistance = distances[j];
+                }
+            }
+
+            if (minIndex == -1 || minIndex == index2) {
+                break; // No reachable vertices left or destination reached
+            }
+            visited[minIndex] = true;
+
+            // Update distances to neighbors of the current vertex
+            for (int neighbor = 0; neighbor < size; neighbor++) {
+                if (!visited[neighbor] && adjacencyMatrix[minIndex][neighbor] < Double.MAX_VALUE) {
+                    double alt = distances[minIndex] + adjacencyMatrix[minIndex][neighbor];
+                    if (alt < distances[neighbor]) {
+                        distances[neighbor] = alt;
+                        previous[neighbor] = minIndex;
+                    }
+                }
+            }
+        }
+
+        // Construct the path from end to start by following previous array
+        int current = index2;
+        while (previous[current] != -1) {
+            int prev = previous[current];
+            // Assuming landmarks are stored in a list or similar structure
+            Landmark startLandmark = MainController.mainController.landmarks.get(prev);
+            Landmark endLandmark = MainController.mainController.landmarks.get(current);
+            streets.add(new Street("", startLandmark, endLandmark)); // Street name is empty as example
+            current = prev;
+        }
+
+        return streets;
+    }
+
+
+    public ArrayList<Street> dijkstraShortestPathGEORGE(String landmark1, String landmark2){
+        ArrayList<Street> streets = new ArrayList<>();
+
+        // Get indices of landmarks
+        Integer index1 = landmarkIndexMap.get(landmark1);
+        Integer index2 = landmarkIndexMap.get(landmark2);
+
+        if (index1 == null || index2 == null) {
+            System.out.println("One of the landmarks is not in the map: " + landmark1 + ", " + landmark2);
+            return streets; // Return empty list if either index is null
+        }
 
         double[] distances = new double[size];
         for (int i = 0 ; i<distances.length;i++)
@@ -133,5 +210,55 @@ public class ParisMap {
 
         return streets;
     }
+    public ArrayList<Point2D> bfsShortestPath(Image BwImage, Point2D start, Point2D end){
+        int wiidth = (int) BwImage.getWidth();
+        int height = (int) BwImage.getHeight();
+        boolean[][] visited = new boolean[wiidth][height];
+        // The line `Queue<Point2D> queue = new LinkedList<>();` is creating a queue data structure using the `LinkedList`
+        // implementation in Java.
+        Queue<Point2D> queue = new LinkedList<>();
+        Map<Point2D, Point2D>parent = new HashMap<>();
+        queue.add(start);
+        visited[(int)start.getX()][(int)start.getY()] = true;
+        while (!queue.isEmpty()) {
+
+            Point2D current = queue.poll();
+            if(current.equals(end)){
+                return contructPath(parent, current);
+            }
+            // initializing arrays `dx` and `dy` with values that represent the changes in x and y
+            // coordinates for moving in four directions: up, left, down, and right.
+            double[] dx = {-1, 0, 1, 0};
+            double[] dy = {0, -1, 0, 1};
+            for (int i = 0; i < dx.length; i++) {
+                for (int j = 0; j < dy.length; j++) {
+                    // calculating the new coordinates `(x, y)` by adding the changes in x and y
+                    // directions specified by the arrays `dx` and `dy` to the current coordinates of the point `current`.
+                    int x = (int) (current.getX() + dx[i]);
+                    int y = (int) (current.getY() + dy[j]);
+                    if (x >= 0 && x < wiidth && y >= 0 && y < height &&!visited[(int)x][(int)y] && isWhite(BwImage, x, y)) {
+                        queue.add(new Point2D(x, y));
+                        visited[(int)x][(int)y] = true;
+                        parent.put(new Point2D(x, y), current);
+                    }
+                }
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private boolean isWhite(Image bwImage, int x, int y) {
+        Color color = bwImage.getPixelReader().getColor(x, y);
+        return color.getBrightness() > 0.9; // A threshold to account for slight variations in color
+    }
+
+    private ArrayList<Point2D> contructPath(Map<Point2D, Point2D> parent, Point2D current) {
+        LinkedList<Point2D> path = new LinkedList<>();
+        for (Point2D p = current; p!= null; p = parent.get(p)){
+            path.addFirst(p);
+        }
+       return new ArrayList<Point2D>(path);
+    }
+
 
 }
