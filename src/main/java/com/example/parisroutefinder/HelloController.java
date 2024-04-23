@@ -228,7 +228,7 @@ public class HelloController implements Initializable {
 //        MainController.mainController.destLandmarks.getItems().add(l5.name);
 //        MainController.mainController.destLandmarks.getItems().add(l6.name);
 //        MainController.mainController.destLandmarks.getItems().add(l7.name);
-        MainController.mainController.destLandmarks.getItems().add("Waypoint");
+//        MainController.mainController.destLandmarks.getItems().add("Waypoint");
 
         HelloApplication.mainStage.setScene(HelloApplication.mainS);
         MainController.mainController.parisMap = MainController.mainController.mapImageView.getImage();

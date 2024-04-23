@@ -27,12 +27,14 @@ public class MainController implements Initializable {
     @FXML
     public ImageView bwMapImageView;
 
+
     @FXML
     public RadioButton waypoint;
     @FXML
     public ChoiceBox<String> startLandmarks,destLandmarks;
     @FXML
     public CheckBox louvre,sacreCouer,eiffelTower,notreDam,arcDeTriomphe,operaGarnier,catacombs;
+    public Point2D lastClick  ;
     public Image parisMap,parisWithLandmarks;
     public WritableImage bAndWParis;
     public Tooltip tooltip;
@@ -40,7 +42,7 @@ public class MainController implements Initializable {
     public ParisMap parisGraph;
 
 
-    public void clickOnImage(MouseEvent e){
+    public void clickOnImageOLd(MouseEvent e){
         double xInView = e.getX();
         double yInView = e.getY();
 
@@ -50,6 +52,33 @@ public class MainController implements Initializable {
         if (!waypoint.isSelected()) {
             addToolTip(e, xOfImage, yOfImage);
             System.out.println(xOfImage+" "+ yOfImage);
+        } else {
+            Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+            GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+            graphicsContext.drawImage(parisWithLandmarks, 0, 0, parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+
+            graphicsContext.setFill(Color.BLUE);
+            graphicsContext.fillOval(xOfImage - 5, yOfImage- 5, 10, 10);
+
+            WritableImage waypointed = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+            canvas.snapshot(null, waypointed);
+            MainController.mainController.mapImageView.setImage(waypointed);
+        }
+    }
+    public void clickOnImage(MouseEvent e) {
+        double xInView = e.getX();
+        double yInView = e.getY();
+
+        double ratio = parisMap.getWidth() / mapImageView.getFitWidth();
+        int xOfImage = (int) (xInView * ratio);
+        int yOfImage = (int) (yInView * ratio);
+
+        // Store the last clicked waypoint
+        lastClick = new Point2D(xOfImage, yOfImage);
+
+        if (!waypoint.isSelected()) {
+            addToolTip(e, xOfImage, yOfImage);
+            System.out.println(xOfImage + " " + yOfImage);
         } else {
             Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
             GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
@@ -80,6 +109,28 @@ public class MainController implements Initializable {
         }
     }
     public void bfsShortestPath() {
+        if(startLandmarks.getValue().equals("Waypoint") && destLandmarks.getValue()!=null && waypoint.isSelected()) {
+            String destLandmark = destLandmarks.getValue();
+            Point2D start = lastClick;
+            Point2D end = landmarkPoint(destLandmark);
+            if(start!=null && end!=null) {
+                ArrayList<Point2D> path = parisGraph.bfsShortestPath(bAndWParis, start, end);
+                Canvas canvas = new Canvas(parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.drawImage(parisWithLandmarks, 0, 0, parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+                if (path.size() > 1) {
+
+                    for (int i = 0; i < path.size() - 1; i++) {
+                        Point2D p1 = path.get(i);
+                        Point2D p2 = path.get(i + 1);
+                        gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+                    }
+                }
+                WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
+                canvas.snapshot(null, imageWithPath);
+                mapImageView.setImage(imageWithPath);
+            }
+        }
         if (startLandmarks.getValue() != null && destLandmarks.getValue() != null) {
             String startLandmark = startLandmarks.getValue();
             String destLandmark = destLandmarks.getValue();
