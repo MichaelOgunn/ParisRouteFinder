@@ -5,10 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -26,8 +23,8 @@ public class MainController implements Initializable {
     public ImageView mapImageView;
     @FXML
     public ImageView bwMapImageView;
-
-
+    @FXML
+    public TextField historicVal, routeNumber;
     @FXML
     public RadioButton waypoint;
     @FXML
