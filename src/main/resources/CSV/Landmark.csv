@@ -39,13 +39,14 @@ Junction,"j25",374,244,0,,
 Junction,"j26",258,223,0,,
 
 Junction,"j27",306,335,0,,
-Junction,"j28",341,239,0,
+Junction,"j28",341,239,0,,
+Junction,"j29",329,206,0,,
+Junction,"j30",116,205,0,
 
 
 
 
 
-Street, "eiffelToj1",,,, "Eiffel Tower", "j1"
 Street, "j1Toj2",,,, "j1", "j2"
 Street, "j2Toj3",,,, "j2", "j3"
 Street, "j3Toj4",,,, "j3", "j4"
@@ -53,15 +54,16 @@ Street, "j4ToArcDeTriomphe",,,, "j4", "Arc de Triomphe"
 Street, "j4Toj5",,,, "j4", "j5"
 Street, "j5Toj6",,,, "j5", "j6"
 Street, "j6Toj7",,,, "j6", "j7"
-Street, "j7ToLouvre",,,, "j7", "Louvre"
 Street, "j5Toj8",,,, "j5", "j8"
 Street, "j8Toj9",,,, "j8", "j9"
+Street, "j10Toj9",,,, "j10", "j9"
 Street, "j9ToLouvre",,,, "j9", "Louvre"
-Street, "j9toOperaGarnier",,,, "j9", "Opera Garnier"
+Street, "j17toOperaGarnier",,,, "j17", "Opera Garnier"
 Street, "OperaGarnierToj10",,,, "Opera Garnier", "j10"
 Street, "j10Toj11",,,, "j10", "j11"
 Street, "j11Toj12",,,, "j11", "j12"
 Street, "j12Toj13",,,, "j12", "j13"
+Street, "SacreToj13",,,, "Sacre-Coeur", "j13"
 Street, "j13Toj14",,,, "j13", "j14"
 Street, "j14Toj15",,,, "j14", "j15"
 Street, "j14ToSacre",,,, "j14", "Sacre-Coeur"
@@ -80,9 +82,15 @@ Street, "j23Toj24",,,, "j23", "j24"
 Street, "j24Toj25",,,, "j24", "j25"
 Street, "j25ToNotreDam",,,, "j25", "Notre Dam"
 Street, "j20Toj26",,,, "j20", "j26"
-Street, "j20Toj26",,,, "j19", "j26"
-Street, "j20ToCatacombs",,,, "j20", "Catacombs"
+Street, "j19Toj26",,,, "j19", "j26"
 Street, "CatacombsToj27",,,, "Catacombs", "j27"
 Street, "j27Toj28",,,, "j27", "j28"
 Street, "j28Toj24",,,, "j28", "j24"
 Street, "j6Toj21",,,, "j6", "j21"
+Street, "j7Toj29",,,, "j7", "j29"
+Street, "j29ToLouvre",,,, "j29", "Louvre"
+Street, "j16Toj29",,,, "j16", "j29"
+Street, "EiffelToj30",,,, "Eiffel Tower", "j30"
+Street, "j1Toj30",,,, "j1", "j30"
+Street, "j26ToCatacombs",,,, "j26", "Catacombs"
+Street, "j3Toj5",,,, "j3", "j5"

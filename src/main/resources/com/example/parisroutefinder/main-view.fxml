@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parisroutefinder.MainController">
+<VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parisroutefinder.MainController">
     <MenuBar prefHeight="17.0" prefWidth="900.0">
         <menus>
             <Menu mnemonicParsing="false" text="File">
@@ -42,7 +33,7 @@
                     <RadioButton fx:id="waypoint" mnemonicParsing="false" onMouseClicked="#waypointDeSelected" prefHeight="18.0" prefWidth="86.0" text="Waypoint" />
                     <ChoiceBox fx:id="startLandmarks" prefWidth="150.0" />
                     <ChoiceBox fx:id="destLandmarks" prefWidth="150.0" />
-               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                 </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="403.0" prefWidth="464.0">
@@ -59,8 +50,10 @@
         <children>
             <Button mnemonicParsing="false" onAction="#dijkstraShortestPath" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(Dijkstra)" />
             <Button mnemonicParsing="false" onAction="#bfsShortestPath" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(BFS)" />
-            <Button layoutX="460.0" layoutY="90.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Most Historical Route" />
-         <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Multiple Route(DFS)" />
+            <Button layoutX="460.0" layoutY="90.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Most Historical Route"/>
+            <TextField prefHeight="26.0" prefWidth="74.0" promptText="Hist. Value" fx:id="historicVal"/>
+            <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Multiple Route(DFS)" />
+            <TextField layoutX="540.0" layoutY="41.0" prefHeight="26.0" prefWidth="89.0" promptText="Route No." fx:id="routeNumber" />
         </children>
     </HBox>
     <Label alignment="CENTER" prefHeight="6.0" prefWidth="530.0" text="Places to Avoid" textAlignment="CENTER">
