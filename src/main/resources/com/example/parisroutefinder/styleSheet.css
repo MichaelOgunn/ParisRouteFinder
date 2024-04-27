@@ -1,0 +1,86 @@
+/* General Styling */
+.root {
+  -fx-font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+  -fx-base: #E3DCC2;
+  -fx-background: #F6F4EF;
+}
+
+/* MenuBar Styling */
+.menu-bar {
+  -fx-background-color: #F6F4EF;
+}
+
+.menu {
+  -fx-text-fill: #5A4A42;
+}
+
+/* Button Styling */
+.button {
+  -fx-background-color: #E3DCC2;
+  -fx-background-radius: 15;
+  -fx-border-color: #B19F91;
+  -fx-border-radius: 15;
+  -fx-text-fill: #5A4A42;
+  -fx-font-weight: bold;
+  -fx-padding: 5 22;
+}
+
+.button:hover {
+  -fx-background-color: #CFC4B2;
+}
+
+/* RadioButton Styling */
+.radio-button {
+  -fx-text-fill: #5A4A42;
+}
+
+/* ChoiceBox Styling */
+.choice-box {
+  -fx-background-color: #E3DCC2;
+  -fx-text-fill: #5A4A42;
+}
+
+/* TextField Styling */
+.text-field {
+  -fx-background-color: #E3DCC2;
+  -fx-text-fill: #5A4A42;
+}
+
+/* CheckBox Styling */
+.check-box {
+  -fx-text-fill: #5A4A42;
+}
+
+/* Label Styling */
+.label {
+  -fx-text-fill: #5A4A42;
+  -fx-font-size: 14px;
+}
+
+/* Image Styling */
+.image-view {
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+/* HBox and VBox Styling */
+.hbox, .vbox {
+  -fx-background-color: #F6F4EF;
+}
+
+/* Insets and Padding */
+.vbox, .hbox {
+  -fx-padding: 10;
+}
+
+
+
+#exploreButton {
+  -fx-font-size: 16px;
+  -fx-text-fill: #F6F4EF;
+  -fx-background-color: #8A7E69;
+  -fx-background-radius: 20;
+}
+
+#exploreButton:hover {
+  -fx-background-color: #9E9586;
+}

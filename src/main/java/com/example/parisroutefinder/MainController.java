@@ -162,7 +162,7 @@ public class MainController implements Initializable {
         if(startLandmarks.getValue()!=null && destLandmarks.getValue()!=null) {
             List<List<String>> allPaths = parisGraph.findAllPaths(startLandmarks.getValue(),destLandmarks.getValue());
             int routes = Integer.parseInt(routeNumber.getText());
-            List<List<String>> selectedPaths = parisGraph.getRandomPaths(allPaths,routes);
+            List<List<String>> selectedPaths = parisGraph.selectRandomPaths(allPaths,routes);
             drawPaths(selectedPaths);
 
 
@@ -193,6 +193,7 @@ public class MainController implements Initializable {
         }
         mapImageView.setImage(canvas.snapshot(null, null)); // Update the ImageView with the new canvas
     }
+
 
     private Point2D landmarkPoint(String landmarkName) {
         Landmark landmark = getLandmarkByName(landmarkName);
