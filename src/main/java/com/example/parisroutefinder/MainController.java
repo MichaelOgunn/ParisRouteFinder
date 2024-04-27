@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -156,6 +157,41 @@ public class MainController implements Initializable {
         }
 
 
+    }
+   public void multipleDFS(){
+        if(startLandmarks.getValue()!=null && destLandmarks.getValue()!=null) {
+            List<List<String>> allPaths = parisGraph.findAllPaths(startLandmarks.getValue(),destLandmarks.getValue());
+            int routes = Integer.parseInt(routeNumber.getText());
+            List<List<String>> selectedPaths = parisGraph.getRandomPaths(allPaths,routes);
+            drawPaths(selectedPaths);
+
+
+
+        }
+   }
+    private void drawPaths(List<List<String>> paths) {
+        Canvas canvas = new Canvas(parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.drawImage(parisWithLandmarks, 0, 0, parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+
+        Random rand = new Random();
+        for (List<String> path : paths) {
+            // Generate random color for each path
+            Color randomColor = Color.rgb(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+            gc.setStroke(randomColor);
+            gc.setLineWidth(2);
+
+            for (int i = 0; i < path.size() - 1; i++) {
+                String startLandmarkName = path.get(i);
+                String endLandmarkName = path.get(i + 1);
+                Point2D start = landmarkPoint(startLandmarkName);
+                Point2D end = landmarkPoint(endLandmarkName);
+                if (start != null && end != null) {
+                    gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
+                }
+            }
+        }
+        mapImageView.setImage(canvas.snapshot(null, null)); // Update the ImageView with the new canvas
     }
 
     private Point2D landmarkPoint(String landmarkName) {

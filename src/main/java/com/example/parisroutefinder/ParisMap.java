@@ -259,6 +259,64 @@ public class ParisMap {
         }
        return new ArrayList<Point2D>(path);
     }
+    // Method to initiate DFS and find all paths
+    public List<List<String>> findAllPaths(String startLandmark, String endLandmark) {
+        List<List<String>> allPaths = new ArrayList<>();
+        if (landmarkIndexMap.containsKey(startLandmark) && landmarkIndexMap.containsKey(endLandmark)) {
+            int startIdx = landmarkIndexMap.get(startLandmark);
+            int endIdx = landmarkIndexMap.get(endLandmark);
+            dfsAllPaths(startIdx, endIdx, new boolean[size], new ArrayList<>(), allPaths);
+        }
+        return allPaths;
+    }
+
+
+    private void dfsAllPaths(int current, int destination, boolean[] visited, List<Integer> path, List<List<String>> allPaths) {
+        visited[current] = true;
+        path.add(current);
+
+        if (current == destination) {
+            allPaths.add(convertPathToString(path));
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (!visited[i] && adjacencyMatrix[current][i] != Double.MAX_VALUE) {
+                    dfsAllPaths(i, destination, visited, path, allPaths);
+                }
+            }
+        }
+
+        // Backtrack
+        path.remove(path.size() - 1);
+        visited[current] = false;
+    }
+    public String getLandmarkName(int index) {
+        return MainController.mainController.landmarks.get(index).getName();
+    }
+    private List<String> convertPathToString(List<Integer> path) {
+        List<String> stringPath = new ArrayList<>();
+        for (int index : path) {
+            stringPath.add(getLandmarkName(index));
+        }
+        return stringPath;
+    }
+
+    // Random path selection
+    public List<List<String>> selectRandomPaths(List<List<String>> allPaths, int count) {
+        List<List<String>> selectedPaths = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < count && !allPaths.isEmpty(); i++) {
+            selectedPaths.add(allPaths.remove(random.nextInt(allPaths.size())));
+        }
+        return selectedPaths;
+    }
+    public List<List<String>> getRandomPaths(List<List<String>> allPaths, int numberOfPaths) {
+        List<List<String>> randomPaths = new ArrayList<>();
+        Random rand = new Random();
+        for (int i = 0; i < Math.min(numberOfPaths, allPaths.size()); i++) {
+            randomPaths.add(allPaths.remove(rand.nextInt(allPaths.size())));
+        }
+        return randomPaths;
+    }
 
 
 }

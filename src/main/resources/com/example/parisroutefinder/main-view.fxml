@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parisroutefinder.MainController">
+<VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parisroutefinder.MainController">
     <MenuBar prefHeight="17.0" prefWidth="900.0">
         <menus>
             <Menu mnemonicParsing="false" text="File">
@@ -50,10 +60,10 @@
         <children>
             <Button mnemonicParsing="false" onAction="#dijkstraShortestPath" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(Dijkstra)" />
             <Button mnemonicParsing="false" onAction="#bfsShortestPath" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(BFS)" />
-            <Button layoutX="460.0" layoutY="90.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Most Historical Route"/>
-            <TextField prefHeight="26.0" prefWidth="74.0" promptText="Hist. Value" fx:id="historicVal"/>
-            <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Multiple Route(DFS)" />
-            <TextField layoutX="540.0" layoutY="41.0" prefHeight="26.0" prefWidth="89.0" promptText="Route No." fx:id="routeNumber" />
+            <Button layoutX="460.0" layoutY="90.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Most Historical Route" />
+            <TextField fx:id="historicVal" prefHeight="26.0" prefWidth="74.0" promptText="Hist. Value" />
+            <Button mnemonicParsing="false" onAction="#multipleDFS" prefHeight="66.0" prefWidth="154.0" text="Multiple Route(DFS)" />
+            <TextField fx:id="routeNumber" layoutX="540.0" layoutY="41.0" prefHeight="26.0" prefWidth="89.0" promptText="Route No." />
         </children>
     </HBox>
     <Label alignment="CENTER" prefHeight="6.0" prefWidth="530.0" text="Places to Avoid" textAlignment="CENTER">

@@ -12,8 +12,8 @@ class StreetTest {
 
     @BeforeEach
     void setUp() {
-        startLandmark = new Landmark("Eiffel Tower",48.85,2.29,10);
-        endLandmark = new Landmark("Louvre Museum",48.86,2.33,10);
+        startLandmark = new Landmark("Eiffel Tower",48.85,2.29,10,false);
+        endLandmark = new Landmark("Louvre Museum",48.86,2.33,10,true);
 //        street = new Street("Eiffel-Louvre",3.5,startLandmark,endLandmark);
         street = new Street("Eiffel-Louvre",startLandmark,endLandmark);
     }
@@ -48,7 +48,7 @@ class StreetTest {
 
     @Test
     void setStartLandmark() {
-        Landmark newLandmark = new Landmark("Notre Dame",48.85,2.29,10);
+        Landmark newLandmark = new Landmark("Notre Dame",48.85,2.29,10,true);
         street.setStartLandmark(newLandmark);
         assertSame(newLandmark,street.getStartLandmark());
     }
@@ -60,7 +60,7 @@ class StreetTest {
 
     @Test
     void setEndLandmark() {
-        Landmark newEnd = new Landmark("Panthéon", 48.8463, 2.3461, 8);
+        Landmark newEnd = new Landmark("Panthéon", 48.8463, 2.3461, 8,true);
         street.setEndLandmark(newEnd);
         assertSame(newEnd, street.getEndLandmark(), "The end landmark should be updated to Panthéon.");
     }
