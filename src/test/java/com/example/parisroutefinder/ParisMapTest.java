@@ -62,6 +62,8 @@ public class ParisMapTest {
         Landmark end = new Landmark("Notre Dame", 1.0, 1.0, 10,false);
         parisMap.addLandmark(start);
         parisMap.addLandmark(end);
+        MainController.mainController.landmarks.add(start);
+        MainController.mainController.landmarks.add(end);
         Street street = new Street("Louvre-Notre Dame", start, end);
         parisMap.addStreet(street);
 
@@ -72,6 +74,17 @@ public class ParisMapTest {
     @Test
     void getRandomPathsShouldReturnSpecifiedNumberOfPaths() {
         // Assume findAllPaths has been tested and works correctly
+        MainController.mainController= new MainController();
+        HelloController.helloController= new HelloController();
+        Landmark start = new Landmark("Louvre", 0.0, 0.0, 10,false);
+        Landmark end = new Landmark("Notre Dame", 1.0, 1.0, 10,false);
+        parisMap.addLandmark(start);
+        parisMap.addLandmark(end);
+        MainController.mainController.landmarks.add(start);
+        MainController.mainController.landmarks.add(end);
+        Street street = new Street("Louvre-Notre Dame", start, end);
+        parisMap.addStreet(street);
+
         List<List<String>> allPaths = parisMap.findAllPaths("Louvre", "Notre Dame");
         int requestedPaths = 1;
         List<List<String>> randomPaths = parisMap.getRandomPaths(allPaths, requestedPaths);
