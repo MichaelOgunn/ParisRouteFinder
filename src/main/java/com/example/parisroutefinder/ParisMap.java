@@ -9,8 +9,8 @@ import java.util.*;
 
 public class ParisMap {
     // Using an adjacency matrix to represent the map
-    private double[][] adjacencyMatrix;
-    private Map<String, Integer> landmarkIndexMap;
+    double[][] adjacencyMatrix;
+    public Map<String, Integer> landmarkIndexMap;
     private int size; // tracks the Size of the matrix
     public WritableImage BwImage;
 
