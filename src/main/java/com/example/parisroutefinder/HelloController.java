@@ -241,10 +241,10 @@ public class HelloController implements Initializable {
                 graphicsContext.setFill(Color.RED);
                 graphicsContext.fillOval(l.latitude - 5, l.longitude - 5, 10, 10);
             }
-            else {
-                graphicsContext.setFill(Color.PURPLE);
-                graphicsContext.fillOval(l.latitude - 5, l.longitude - 5, 10, 10);//for testing
-            }
+//            else {
+//                graphicsContext.setFill(Color.PURPLE);
+//                graphicsContext.fillOval(l.latitude - 5, l.longitude - 5, 10, 10);//for testing
+//            }
         }
         WritableImage landmarks = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
         canvas.snapshot(null, landmarks);

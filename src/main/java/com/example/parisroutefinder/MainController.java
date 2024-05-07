@@ -234,7 +234,7 @@ public class MainController implements Initializable {
     public void addToolTip(MouseEvent e, int latitude, int longitude) {
         for (Landmark l :landmarks) {
             if ((l.latitude<=latitude+10 && l.latitude>=latitude-10) && (l.longitude<=longitude+10 && l.longitude>=longitude-10)
-                && !(l instanceof Junction)) {
+                && !(l.isJunction())) {
                 tooltip = new Tooltip("Name: " + l.getName() + '\n' );
                 break;
             }
