@@ -91,10 +91,47 @@ public class MainController implements Initializable {
             MainController.mainController.mapImageView.setImage(waypointed);
         }
     }
+    private Landmark tempWaypoint;
+    private List<Street> tempStreets = new ArrayList<>();
 
     @FXML
     public void dijkstraShortestPath() {
         mapImageView.setImage(parisWithLandmarks);
+        if (startLandmarks.getValue().equals("Waypoint") && destLandmarks.getValue() != null) {
+            Point2D start = lastClick;
+            if (waypoint.isSelected()) {
+                // Create and add a temporary waypoint
+                tempWaypoint = new Landmark("Waypoint", start.getX(), start.getY(), 10, false);
+                landmarks.add(tempWaypoint);
+                parisGraph.addLandmark(tempWaypoint);
+
+                // Find two closest landmarks and create streets connecting to the waypoint
+                Landmark closestLandmark1 = findClosestLandmark(start.getX(), start.getY());
+                Landmark closestLandmark2 = findAnotherClosestLandmark(start.getX(), start.getY(), closestLandmark1);
+
+                Street s1 = new Street("waypointLm to dest", tempWaypoint, closestLandmark1);
+                Street s2 = new Street("waypointLm to dest2", tempWaypoint, closestLandmark2);
+
+                // Add these streets to both the graph and the temporary streets list
+                parisGraph.addStreet(s1);
+                parisGraph.addStreet(s2);
+                tempStreets.add(s1);
+                tempStreets.add(s2);
+                ArrayList<String> avoid = new ArrayList<>();
+                for (CheckBox a : allToAvoid)
+                    if (a.isSelected()) avoid.add(a.getText());
+                ArrayList<Street> streets = parisGraph.dijkstraShortestPath(startLandmarks.getValue(),destLandmarks.getValue(),avoid);
+                Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.drawImage(parisWithLandmarks,0,0,parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+                for (Street s : streets)
+                    gc.strokeLine(start.getX(),start.getY(),s.endLandmark.latitude,s.endLandmark.longitude);
+                WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
+                canvas.snapshot(null, imageWithPath);
+                mapImageView.setImage(imageWithPath);
+//                resetWaypoints();
+            }
+        }
         if (startLandmarks.getValue() != null && destLandmarks.getValue() != null) {
             ArrayList<String> avoid = new ArrayList<>();
             for (CheckBox a : allToAvoid)
@@ -110,6 +147,117 @@ public class MainController implements Initializable {
             mapImageView.setImage(imageWithPath);
         }
     }
+    public void resetWaypoints() {
+
+        // Remove temporary streets
+        for (Street street : tempStreets) {
+            parisGraph.removeStreet(street);
+        }
+        tempStreets.clear();
+
+        // Remove temporary waypoint
+        if (tempWaypoint != null) {
+            parisGraph.removLandMark(tempWaypoint);
+            landmarks.remove(tempWaypoint);
+            tempWaypoint = null;
+        }lastClick = null;
+        System.out.println("resetWaypoints");
+    }
+    public void dijkstraWithWaypoint(String waypointName, double waypointX, double waypointY, String destination) {
+        // Create and add the waypoint
+        Landmark waypoint = new Landmark(waypointName, waypointX, waypointY, 0, false);
+        System.out.println("Before adding waypoint: " + parisGraph.landmarkIndexMap);
+        landmarks.add(waypoint);
+        parisGraph.addLandmark(waypoint);
+        System.out.println("After adding waypoint: " + parisGraph.landmarkIndexMap);
+
+        // Find two closest landmarks
+        Landmark closestLandmark1 = findClosestLandmark(waypointX, waypointY);
+        Landmark closestLandmark2 = findAnotherClosestLandmark(waypointX, waypointY, closestLandmark1);
+
+        if (closestLandmark1 != null) {
+            Street toLandmark1 = new Street(waypointName + " to " + closestLandmark1.getName(), waypoint, closestLandmark1);
+            parisGraph.addStreet(toLandmark1);
+        } else {
+            System.out.println("No close landmark found for connection 1");
+        }
+
+        if (closestLandmark2 != null) {
+            Street toLandmark2 = new Street(waypointName + " to " + closestLandmark2.getName(), waypoint, closestLandmark2);
+            parisGraph.addStreet(toLandmark2);
+        } else {
+            System.out.println("No close landmark found for connection 2");
+        }
+
+        // Validate the connections before running Dijkstra's algorithm
+        if (!parisGraph.landmarkIndexMap.containsKey(destination)) {
+            System.out.println("Destination not found: " + destination);
+            return;
+        }
+
+        ArrayList<String> avoid = new ArrayList<>();
+        System.out.println("Avoid List: " + avoid);
+
+        ArrayList<Street> path = parisGraph.dijkstraShortestPath(waypointName, destination, avoid);
+
+        if (path.isEmpty()) {
+            System.out.println("No path found from " + waypointName + " to " + destination);
+        }
+
+        // Visualize the path
+        Canvas canvas = new Canvas(parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.drawImage(parisWithLandmarks, 0, 0, parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
+
+        for (Street s : path) {
+            gc.strokeLine(s.startLandmark.latitude, s.startLandmark.longitude, s.endLandmark.latitude, s.endLandmark.longitude);
+        }
+
+        WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
+        canvas.snapshot(null, imageWithPath);
+        mapImageView.setImage(imageWithPath);
+    }
+
+    private Landmark findClosestLandmark(double x, double y) {
+        Landmark closestLandmark = null;
+        double minDistance = Double.MAX_VALUE;
+
+        // Loop through all landmarks in the main graph controller to find the closest
+        for (Landmark landmark : MainController.mainController.landmarks) {
+            double distance = calculateDistance(x, y, landmark.latitude, landmark.longitude);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestLandmark = landmark;
+            }
+        }
+
+        return closestLandmark;
+    }
+
+    private Landmark findAnotherClosestLandmark(double x, double y, Landmark exclude) {
+        Landmark secondClosestLandmark = null;
+        double minDistance = Double.MAX_VALUE;
+
+        // Loop through all landmarks and find the closest that isn't the excluded one
+        for (Landmark landmark : MainController.mainController.landmarks) {
+            if (landmark.equals(exclude)) continue;  // Skip the excluded landmark
+
+            double distance = calculateDistance(x, y, landmark.latitude, landmark.longitude);
+            if (distance < minDistance) {
+                minDistance = distance;
+                secondClosestLandmark = landmark;
+            }
+        }
+
+        return secondClosestLandmark;
+    }
+    private double calculateDistance(double x1, double y1, double x2, double y2) {
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+
     public void bfsShortestPath() {
         if(startLandmarks.getValue().equals("Waypoint") && destLandmarks.getValue()!=null && waypoint.isSelected()) {
             String destLandmark = destLandmarks.getValue();

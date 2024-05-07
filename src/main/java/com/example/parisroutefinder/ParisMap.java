@@ -35,15 +35,30 @@ public class ParisMap {
     }
     // Methods to add/remove landmarks and streets, find routes, etc.
     public void addLandmark(Landmark landmark) {
+        // Check if matrix needs resizing
+        if (size == adjacencyMatrix.length) {
+            // Increase capacity by a factor or by a specific amount
+            int newCapacity = adjacencyMatrix.length + 10;
+            double[][] newMatrix = new double[newCapacity][newCapacity];
+            // Copy existing values to the new matrix
+            for (int i = 0; i < size; i++) {
+                System.arraycopy(adjacencyMatrix[i], 0, newMatrix[i], 0, size);
+            }
+            // Fill new rows and columns with default values
+            for (int i = size; i < newCapacity; i++) {
+                Arrays.fill(newMatrix[i], Double.MAX_VALUE);
+            }
+            adjacencyMatrix = newMatrix;
+        }
+
+        // Add new landmark if it's not already in the map
         if (!landmarkIndexMap.containsKey(landmark.getName())) {
             landmarkIndexMap.put(landmark.getName(), size);
-            adjacencyMatrix[size][size] = 0;
-            System.out.println("Adding landmark: " + landmark.getName() + " with index " + size);
-            adjacencyMatrix[size][landmarkIndexMap.get(landmark.getName())] = 0;
-            adjacencyMatrix[landmarkIndexMap.get(landmark.getName())][size] = 0;
+            adjacencyMatrix[size][size] = 0; // Initialize distance to self as 0
             size++;
         }
     }
+
     public void removLandMark(Landmark landmark){
         if(landmarkIndexMap.containsKey(landmark.getName())){
             int indexToRemove = landmarkIndexMap.get(landmark.getName());
@@ -82,6 +97,14 @@ public class ParisMap {
             adjacencyMatrix[endIndex][startIndex] = street.getDistance();
         }
     }
+    public void removeStreet(Street street) {
+        if (landmarkIndexMap.containsKey(street.getStartLandmark().getName()) && landmarkIndexMap.containsKey(street.getEndLandmark().getName())) {
+            int startIndex = landmarkIndexMap.get(street.getStartLandmark().getName());
+            int endIndex = landmarkIndexMap.get(street.getEndLandmark().getName());
+            adjacencyMatrix[startIndex][endIndex] = Double.MAX_VALUE;
+            adjacencyMatrix[endIndex][startIndex] = Double.MAX_VALUE;
+        }
+    }
     public ArrayList<Street> dijkstraShortestPath(String landmark1, String landmark2, ArrayList<String> avoid) {
         ArrayList<Street> streets = new ArrayList<>();
 
@@ -90,10 +113,11 @@ public class ParisMap {
         Integer index2 = landmarkIndexMap.get(landmark2);
 
         // Check if indices are valid
-        if (index1 == null || index2 == null || index1 >= size || index2 >= size) {
+        if (index1 == null || index2 == null || index1 < 0 || index2 < 0 || index1 >= MainController.mainController.landmarks.size() || index2 >= MainController.mainController.landmarks.size()) {
             System.out.println("Invalid indices or landmarks not found.");
-            return streets; // Return empty path indicating an error
+            return streets; // Return an empty path to indicate an error
         }
+
 
         double[] distances = new double[size];
         Arrays.fill(distances, Double.MAX_VALUE);
@@ -323,4 +347,12 @@ public class ParisMap {
     }
 
 
+    public Landmark getLandmarkByName(String landmark1) {
+        for (Landmark landmark : MainController.mainController.landmarks) {
+            if (landmark.getName().equals(landmark1)) {
+                return landmark;
+            }
+        }
+        return null;
+    }
 }

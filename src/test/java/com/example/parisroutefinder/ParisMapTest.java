@@ -45,6 +45,7 @@ public class ParisMapTest {
         Landmark end = new Landmark("Notre Dame", 1.0, 1.0, 10,false);
         parisMap.addLandmark(start);
         parisMap.addLandmark(end);
+
         Street street = new Street("Louvre-Notre Dame", start, end);
         parisMap.addStreet(street);
 
@@ -62,7 +63,7 @@ public class ParisMapTest {
         Landmark end = new Landmark("Notre Dame", 1.0, 1.0, 10,false);
         parisMap.addLandmark(start);
         parisMap.addLandmark(end);
-        MainController.mainController.landmarks.add(start);
+            MainController.mainController.landmarks.add(start);
         MainController.mainController.landmarks.add(end);
         Street street = new Street("Louvre-Notre Dame", start, end);
         parisMap.addStreet(street);
