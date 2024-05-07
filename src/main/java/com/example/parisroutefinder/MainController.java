@@ -32,6 +32,7 @@ public class MainController implements Initializable {
     public ChoiceBox<String> startLandmarks,destLandmarks;
     @FXML
     public CheckBox louvre,sacreCouer,eiffelTower,notreDam,arcDeTriomphe,operaGarnier,catacombs;
+    public ArrayList<CheckBox> allToAvoid = new ArrayList<>();
     public Point2D lastClick  ;
     public Image parisMap,parisWithLandmarks;
     public WritableImage bAndWParis;
@@ -95,7 +96,10 @@ public class MainController implements Initializable {
     public void dijkstraShortestPath() {
         mapImageView.setImage(parisWithLandmarks);
         if (startLandmarks.getValue() != null && destLandmarks.getValue() != null) {
-            ArrayList<Street> streets = parisGraph.dijkstraShortestPath(startLandmarks.getValue(),destLandmarks.getValue());
+            ArrayList<String> avoid = new ArrayList<>();
+            for (CheckBox a : allToAvoid)
+                if (a.isSelected()) avoid.add(a.getText());
+            ArrayList<Street> streets = parisGraph.dijkstraShortestPath(startLandmarks.getValue(),destLandmarks.getValue(),avoid);
             Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
             GraphicsContext gc = canvas.getGraphicsContext2D();
             gc.drawImage(parisWithLandmarks,0,0,parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
