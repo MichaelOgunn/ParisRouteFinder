@@ -60,8 +60,7 @@
         <children>
             <Button mnemonicParsing="false" onAction="#dijkstraShortestPath" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(Dijkstra)" />
             <Button mnemonicParsing="false" onAction="#bfsShortestPath" prefHeight="66.0" prefWidth="154.0" text="Shortest Path(BFS)" />
-            <Button layoutX="460.0" layoutY="90.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Most Historical Route" />
-            <TextField fx:id="historicVal" prefHeight="26.0" prefWidth="74.0" promptText="Hist. Value" />
+            <Button layoutX="460.0" onAction="#dijkstraShortestPathHistorical" layoutY="90.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="154.0" text="Most Historical Route" />
             <Button mnemonicParsing="false" onAction="#multipleDFS" prefHeight="66.0" prefWidth="154.0" text="Multiple Route(DFS)" />
             <TextField fx:id="routeNumber" layoutX="540.0" layoutY="41.0" prefHeight="26.0" prefWidth="89.0" promptText="Route No." />
         </children>

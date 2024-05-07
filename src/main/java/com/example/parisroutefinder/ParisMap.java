@@ -10,6 +10,8 @@ import java.util.*;
 public class ParisMap {
     // Using an adjacency matrix to represent the map
     double[][] adjacencyMatrix;
+    double[][] historicalValues;
+
     public Map<String, Integer> landmarkIndexMap;
     private int size; // tracks the Size of the matrix
     public WritableImage BwImage;
@@ -19,14 +21,17 @@ public class ParisMap {
     public ParisMap(int initialCapacity, WritableImage image) {
         this.BwImage = image;
         adjacencyMatrix = new double[initialCapacity][initialCapacity];
+        historicalValues = new double[initialCapacity][initialCapacity];
         //initializing distances to indicate that there is no route
         for (int i = 0; i <initialCapacity ; i++) {
             for (int j = 0; j < initialCapacity; j++) {
                 if (i == j) {
                     adjacencyMatrix[i][j] = 0; // 0 means the distance from a node to itself is 0
+                    historicalValues[i][j] = 0;
                 }
                 else {
                     adjacencyMatrix[i][j] = Double.MAX_VALUE; // Double.MAX_VALUE means there is no route
+                    historicalValues[i][j] = Double.MAX_VALUE;
                 }
             }
         }
@@ -41,6 +46,8 @@ public class ParisMap {
             System.out.println("Adding landmark: " + landmark.getName() + " with index " + size);
             adjacencyMatrix[size][landmarkIndexMap.get(landmark.getName())] = 0;
             adjacencyMatrix[landmarkIndexMap.get(landmark.getName())][size] = 0;
+            historicalValues[size][landmarkIndexMap.get(landmark.getName())] = 0;
+            historicalValues[landmarkIndexMap.get(landmark.getName())][size] = 0;
             size++;
         }
     }
@@ -80,6 +87,8 @@ public class ParisMap {
             int endIndex = landmarkIndexMap.get(street.getEndLandmark().getName());
             adjacencyMatrix[startIndex][endIndex] = street.getDistance();
             adjacencyMatrix[endIndex][startIndex] = street.getDistance();
+            historicalValues[startIndex][endIndex] = street.getTotalHistoricalValue();
+            historicalValues[endIndex][startIndex] = street.getTotalHistoricalValue();
         }
     }
     public ArrayList<Street> dijkstraShortestPath(String landmark1, String landmark2, ArrayList<String> avoid) {
@@ -152,37 +161,40 @@ public class ParisMap {
     }
 
 
-    public ArrayList<Street> dijkstraShortestPathGEORGE(String landmark1, String landmark2){
+    public ArrayList<Street> dijkstraShortestPathHistorical(String landmark1, String landmark2){
         ArrayList<Street> streets = new ArrayList<>();
 
         // Get indices of landmarks
         Integer index1 = landmarkIndexMap.get(landmark1);
         Integer index2 = landmarkIndexMap.get(landmark2);
 
-        if (index1 == null || index2 == null) {
-            System.out.println("One of the landmarks is not in the map: " + landmark1 + ", " + landmark2);
-            return streets; // Return empty list if either index is null
+        // Check if indices are valid
+        if (index1 == null || index2 == null || index1 >= size || index2 >= size) {
+            System.out.println("Invalid indices or landmarks not found.");
+            return streets; // Return empty path indicating an error
         }
 
-        double[] distances = new double[size];
-        for (int i = 0 ; i<distances.length;i++)
-            distances[i]=Double.MAX_VALUE;
-        distances[index1]=0;
+        double[] historics = new double[size];
+        Arrays.fill(historics, Double.MAX_VALUE);
+        historics[index1] = 0;
+
         int[] previous = new int[size];
-        for (int i = 0 ; i<previous.length;i++)
-            previous[i]=-1;
+        Arrays.fill(previous, -1);
+
         boolean[] visited = new boolean[size];
 
         for (int i = 0; i < size; i++) {
             int minIndex = -1;
             double minDistance = Double.MAX_VALUE;
+
             // Find the vertex with the smallest tentative distance
             for (int j = 0; j < size; j++) {
-                if (!visited[j] && distances[j] < minDistance) {
+                if (!visited[j] && historics[j] < minDistance) {
                     minIndex = j;
-                    minDistance = distances[j];
+                    minDistance = historics[j];
                 }
             }
+
             if (minIndex == -1 || minIndex == index2) {
                 break; // No reachable vertices left or destination reached
             }
@@ -190,30 +202,30 @@ public class ParisMap {
 
             // Update distances to neighbors of the current vertex
             for (int neighbor = 0; neighbor < size; neighbor++) {
-                if (!visited[neighbor] && adjacencyMatrix[minIndex][neighbor] < Double.MAX_VALUE) {
-                    double alt = distances[minIndex] + adjacencyMatrix[minIndex][neighbor];
-                    if (alt < distances[neighbor]) {
-                        distances[neighbor] = alt;
+                if (!visited[neighbor] && historicalValues[minIndex][neighbor] < Double.MAX_VALUE) {
+                    double alt = historics[minIndex] + historicalValues[minIndex][neighbor];
+                    if (alt < historics[neighbor]) {
+                        historics[neighbor] = alt;
                         previous[neighbor] = minIndex;
                     }
                 }
             }
         }
 
+        // Construct the path from end to start by following previous array
         int current = index2;
         while (previous[current] != -1) {
             int prev = previous[current];
-            Landmark l1 = MainController.mainController.landmarks.get(prev);
-            Landmark l2= MainController.mainController.landmarks.get(current);
-            streets.add(new Street("", l1, l2)); // Add street to the path
+            // Assuming landmarks are stored in a list or similar structure
+            Landmark startLandmark = MainController.mainController.landmarks.get(prev);
+            Landmark endLandmark = MainController.mainController.landmarks.get(current);
+            streets.add(new Street("", startLandmark, endLandmark)); // Street name is empty as example
             current = prev;
         }
 
-        for (Street s : streets)
-            System.out.println(s);
-
         return streets;
     }
+
     public ArrayList<Point2D> bfsShortestPath(Image BwImage, Point2D start, Point2D end){
         int wiidth = (int) BwImage.getWidth();
         int height = (int) BwImage.getHeight();
