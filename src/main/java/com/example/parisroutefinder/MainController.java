@@ -126,6 +126,9 @@ public class MainController implements Initializable {
                 gc.drawImage(parisWithLandmarks,0,0,parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
                 for (Street s : streets)
                     gc.strokeLine(start.getX(),start.getY(),s.endLandmark.latitude,s.endLandmark.longitude);
+                gc.setFill(Color.BLUE);
+                gc.fillOval(lastClick.getX()-5, lastClick.getY()- 5, 10, 10);
+
                 WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
                 canvas.snapshot(null, imageWithPath);
                 mapImageView.setImage(imageWithPath);
@@ -160,7 +163,10 @@ public class MainController implements Initializable {
             parisGraph.removLandMark(tempWaypoint);
             landmarks.remove(tempWaypoint);
             tempWaypoint = null;
-        }lastClick = null;
+        }
+        lastClick = null;
+        waypoint.setSelected(false);
+        waypointDeSelected();
         System.out.println("resetWaypoints");
     }
     public void dijkstraWithWaypoint(String waypointName, double waypointX, double waypointY, String destination) {
@@ -364,12 +370,27 @@ public class MainController implements Initializable {
         return null;
     }
 
+    @FXML
+    public void dijkstraShortestPathHistorical() {
+        mapImageView.setImage(parisWithLandmarks);
+        if (startLandmarks.getValue() != null && destLandmarks.getValue() != null) {
+            ArrayList<Street> streets = parisGraph.dijkstraShortestPathHistorical(startLandmarks.getValue(),destLandmarks.getValue());
+            Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.drawImage(parisWithLandmarks,0,0,parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+            for (Street s : streets)
+                gc.strokeLine(s.startLandmark.latitude,s.startLandmark.longitude,s.endLandmark.latitude,s.endLandmark.longitude);
+            WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
+            canvas.snapshot(null, imageWithPath);
+            mapImageView.setImage(imageWithPath);
+        }
+    }
+
     public void addToolTip(MouseEvent e, int latitude, int longitude) {
         for (Landmark l :landmarks) {
             if ((l.latitude<=latitude+10 && l.latitude>=latitude-10) && (l.longitude<=longitude+10 && l.longitude>=longitude-10)
-                && !(l instanceof Junction)) {
-                tooltip = new Tooltip("Name: " + l.getName() + '\n' +
-                        "Cultural Value: " + l.getCulturalValue());
+                && !(l.isJunction())) {
+                tooltip = new Tooltip("Name: " + l.getName() + '\n');
                 break;
             }
         }

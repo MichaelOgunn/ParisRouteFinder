@@ -4,18 +4,24 @@ package com.example.parisroutefinder;
 public class Street {
     String name;
     double distance;
+    double totalHistoricalValue;
     Landmark startLandmark;
     Landmark endLandmark;
 
     public Street(String name, Landmark start, Landmark end) {
         this.name = name;
         this.distance = calcDistance(start.latitude,start.longitude,end.latitude,end.longitude);
+        this.totalHistoricalValue = start.getCulturalValue() + end.getCulturalValue();
         this.startLandmark = start;
         this.endLandmark = end;
     }
 
     public double calcDistance(double x1, double y1, double x2, double y2 ){
         return (int) Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
+    }
+
+    public double getTotalHistoricalValue() {
+        return totalHistoricalValue;
     }
 
     public String getName() {
