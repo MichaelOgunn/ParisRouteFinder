@@ -241,10 +241,10 @@ public class HelloController implements Initializable {
                 graphicsContext.setFill(Color.RED);
                 graphicsContext.fillOval(l.latitude - 5, l.longitude - 5, 10, 10);
             }
-            else {
-                graphicsContext.setFill(Color.PURPLE);
-                graphicsContext.fillOval(l.latitude - 5, l.longitude - 5, 10, 10);//for testing
-            }
+//            else {
+//                graphicsContext.setFill(Color.PURPLE);
+//                graphicsContext.fillOval(l.latitude - 5, l.longitude - 5, 10, 10);//for testing
+//            }
         }
         WritableImage landmarks = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
         canvas.snapshot(null, landmarks);
@@ -259,7 +259,13 @@ public class HelloController implements Initializable {
                     MainController.mainController.bAndWParis.getPixelWriter().setColor(x,y,Color.BLACK);
                 else MainController.mainController.bAndWParis.getPixelWriter().setColor(x,y,Color.WHITE);
 //                MainController.mainController.bwMapImageView.setImage(MainController.mainController.bAndWParis);
-
+        MainController.mainController.allToAvoid.add(MainController.mainController.catacombs);
+        MainController.mainController.allToAvoid.add(MainController.mainController.louvre);
+        MainController.mainController.allToAvoid.add(MainController.mainController.operaGarnier);
+        MainController.mainController.allToAvoid.add(MainController.mainController.sacreCouer);
+        MainController.mainController.allToAvoid.add(MainController.mainController.arcDeTriomphe);
+        MainController.mainController.allToAvoid.add(MainController.mainController.eiffelTower);
+        MainController.mainController.allToAvoid.add(MainController.mainController.notreDam);//for avoiding landmarks
     }
 //    public Map<String, Landmark> createLandmarksFromCSV(String pathToCsv) throws IOException {
 //        Map<String, Landmark> landmarks = new HashMap<>();

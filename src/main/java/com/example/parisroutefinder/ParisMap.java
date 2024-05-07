@@ -82,7 +82,7 @@ public class ParisMap {
             adjacencyMatrix[endIndex][startIndex] = street.getDistance();
         }
     }
-    public ArrayList<Street> dijkstraShortestPath(String landmark1, String landmark2) {
+    public ArrayList<Street> dijkstraShortestPath(String landmark1, String landmark2, ArrayList<String> avoid) {
         ArrayList<Street> streets = new ArrayList<>();
 
         // Get indices of landmarks
@@ -103,6 +103,10 @@ public class ParisMap {
         Arrays.fill(previous, -1);
 
         boolean[] visited = new boolean[size];
+        for (String a : avoid){
+            int indexToAvoid = landmarkIndexMap.get(a);
+            visited[indexToAvoid]=true;
+        }
 
         for (int i = 0; i < size; i++) {
             int minIndex = -1;
