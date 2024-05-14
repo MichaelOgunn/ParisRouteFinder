@@ -317,6 +317,31 @@ public class MainController implements Initializable {
 
     }
    public void multipleDFS(){
+       if (startLandmarks.getValue().equals("Waypoint") && destLandmarks.getValue() != null) {
+           Point2D start = lastClick;
+           if (waypoint.isSelected()) {
+               // Create and add a temporary waypoint
+               tempWaypoint = new Landmark("Waypoint", start.getX(), start.getY(), 10, false);
+               landmarks.add(tempWaypoint);
+               parisGraph.addLandmark(tempWaypoint);
+
+               // Find two closest landmarks and create streets connecting to the waypoint
+               Landmark closestLandmark1 = findClosestLandmark(start.getX(), start.getY());
+               Landmark closestLandmark2 = findAnotherClosestLandmark(start.getX(), start.getY(), closestLandmark1);
+
+               Street s1 = new Street("waypointLm to dest", tempWaypoint, closestLandmark1);
+               Street s2 = new Street("waypointLm to dest2", tempWaypoint, closestLandmark2);
+               // Add these streets to both the graph and the temporary streets list
+               parisGraph.addStreet(s1);
+               parisGraph.addStreet(s2);
+               tempStreets.add(s1);
+               tempStreets.add(s2);
+               List<List<String>> allPaths = parisGraph.findAllPaths(startLandmarks.getValue(),destLandmarks.getValue());
+               int routes = Integer.parseInt(routeNumber.getText());
+               List<List<String>> selectedPaths = parisGraph.selectRandomPaths(allPaths,routes);
+               drawPaths(selectedPaths);
+           }
+       }
         if(startLandmarks.getValue()!=null && destLandmarks.getValue()!=null) {
             List<List<String>> allPaths = parisGraph.findAllPaths(startLandmarks.getValue(),destLandmarks.getValue());
             int routes = Integer.parseInt(routeNumber.getText());
@@ -332,12 +357,15 @@ public class MainController implements Initializable {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.drawImage(parisWithLandmarks, 0, 0, parisWithLandmarks.getWidth(), parisWithLandmarks.getHeight());
 
+        double lineWidth=4;
+
         Random rand = new Random();
         for (List<String> path : paths) {
             // Generate random color for each path
             Color randomColor = Color.rgb(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
             gc.setStroke(randomColor);
-            gc.setLineWidth(2);
+            gc.setLineWidth(lineWidth);
+            lineWidth*=.5;
 
             for (int i = 0; i < path.size() - 1; i++) {
                 String startLandmarkName = path.get(i);
@@ -373,6 +401,38 @@ public class MainController implements Initializable {
     @FXML
     public void dijkstraShortestPathHistorical() {
         mapImageView.setImage(parisWithLandmarks);
+        if (startLandmarks.getValue().equals("Waypoint") && destLandmarks.getValue() != null) {
+            Point2D start = lastClick;
+            if (waypoint.isSelected()) {
+                // Create and add a temporary waypoint
+                tempWaypoint = new Landmark("Waypoint", start.getX(), start.getY(), 10, false);
+                landmarks.add(tempWaypoint);
+                parisGraph.addLandmark(tempWaypoint);
+
+                // Find two closest landmarks and create streets connecting to the waypoint
+                Landmark closestLandmark1 = findClosestLandmark(start.getX(), start.getY());
+                Landmark closestLandmark2 = findAnotherClosestLandmark(start.getX(), start.getY(), closestLandmark1);
+
+                Street s1 = new Street("waypointLm to dest", tempWaypoint, closestLandmark1);
+                Street s2 = new Street("waypointLm to dest2", tempWaypoint, closestLandmark2);
+
+                // Add these streets to both the graph and the temporary streets list
+                parisGraph.addStreet(s1);
+                parisGraph.addStreet(s2);
+                tempStreets.add(s1);
+                tempStreets.add(s2);
+
+                ArrayList<Street> streets = parisGraph.dijkstraShortestPathHistorical(startLandmarks.getValue(),destLandmarks.getValue());
+                Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.drawImage(parisWithLandmarks,0,0,parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());
+                for (Street s : streets)
+                    gc.strokeLine(s.startLandmark.latitude,s.startLandmark.longitude,s.endLandmark.latitude,s.endLandmark.longitude);
+                WritableImage imageWithPath = new WritableImage((int) parisMap.getWidth(), (int) parisMap.getHeight());
+                canvas.snapshot(null, imageWithPath);
+                mapImageView.setImage(imageWithPath);
+            }
+        }
         if (startLandmarks.getValue() != null && destLandmarks.getValue() != null) {
             ArrayList<Street> streets = parisGraph.dijkstraShortestPathHistorical(startLandmarks.getValue(),destLandmarks.getValue());
             Canvas canvas = new Canvas(parisWithLandmarks.getWidth(),parisWithLandmarks.getHeight());

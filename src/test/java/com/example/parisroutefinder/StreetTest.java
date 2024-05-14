@@ -64,4 +64,12 @@ class StreetTest {
         street.setEndLandmark(newEnd);
         assertSame(newEnd, street.getEndLandmark(), "The end landmark should be updated to Panthéon.");
     }
+
+    @Test
+    void distanceAutomaticallyCalculated(){
+        Landmark l1 = new Landmark("l1",10,10,0,false);
+        Landmark l2 = new Landmark("l2", 20,10,0,false);
+        Street s = new Street("s",l1,l2);
+        assertEquals(10,s.getDistance());
+    }
 }
