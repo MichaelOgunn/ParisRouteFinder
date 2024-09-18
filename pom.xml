@@ -48,6 +48,13 @@
             <artifactId>jmh-core</artifactId>
             <version>1.37</version>
         </dependency>
+
+        <!-- JMH annotation processor -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.37</version>
+        </dependency>
     </dependencies>
 
     <build>
